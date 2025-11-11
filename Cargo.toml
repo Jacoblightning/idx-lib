@@ -2,6 +2,13 @@
 name = "idx-lib"
 version = "0.0.1"
 edition = "2024"
+license = "Apache-2.0 OR MIT"
+description = "A simple library to read the IDX data format as used in, for example, the MNIST dataset"
+repository = "https://github.com/Jacoblightning/idx-lib"
+resolver = "3"
+exclude = [
+    ".gitignore"
+]
 
 [dependencies]
 ndarray = "0.17.1"
