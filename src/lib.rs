@@ -1,6 +1,7 @@
 pub use ndarray::ArrayD;
 use ndarray::IxDyn;
 use std::io::{Read, Seek};
+use std::convert::From;
 
 #[derive(Debug, Default, Clone)]
 pub enum IdxData {
@@ -12,6 +13,20 @@ pub enum IdxData {
     Int(i32),
     Float(f32),
     Double(f64),
+}
+
+impl IdxData {
+    pub fn cast_as<T: From<u8> + From<i8> + From<i16> + From<i32> + From<f32> + From<f64>>(&self) -> Option<T> {
+        match self {
+            Self::None => None,
+            Self::UnsignedByte(val) => Some(<u8  as Into<T>>::into(*val)),
+            Self::SignedByte(val)   => Some(<i8  as Into<T>>::into(*val)),
+            Self::Short(val)        => Some(<i16 as Into<T>>::into(*val)),
+            Self::Int(val)          => Some(<i32 as Into<T>>::into(*val)),
+            Self::Float(val)        => Some(<f32 as Into<T>>::into(*val)),
+            Self::Double(val)       => Some(<f64 as Into<T>>::into(*val)),
+        }
+    }
 }
 
 #[derive(Debug)]
