@@ -2,7 +2,7 @@ pub use ndarray::ArrayD;
 use ndarray::IxDyn;
 use std::io::{Read, Seek};
 
-#[derive(Debug, Default, Clone, PartialEq)]
+#[derive(Debug, Default, Clone)]
 pub enum IdxData {
     #[default]
     None,
@@ -12,71 +12,6 @@ pub enum IdxData {
     Int(i32),
     Float(f32),
     Double(f64),
-}
-
-impl std::ops::Add for IdxData {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        if self != rhs {
-            return Self::None;
-        }
-        match self {
-            Self::None => Self::None,
-            Self::UnsignedByte(val1) => {
-                if let Self::UnsignedByte(val2) = rhs {
-                    Self::UnsignedByte(val1 + val2)
-                } else {
-                    unreachable!();
-                }
-            }
-            Self::SignedByte(val1) => {
-                if let Self::SignedByte(val2) = rhs {
-                    Self::SignedByte(val1 + val2)
-                } else {
-                    unreachable!();
-                }
-            }
-            Self::Short(val1) => {
-                if let Self::Short(val2) = rhs {
-                    Self::Short(val1 + val2)
-                } else {
-                    unreachable!();
-                }
-            }
-            Self::Int(val1) => {
-                if let Self::Int(val2) = rhs {
-                    Self::Int(val1 + val2)
-                } else {
-                    unreachable!();
-                }
-            }
-            Self::Float(val1) => {
-                if let Self::Float(val2) = rhs {
-                    Self::Float(val1 + val2)
-                } else {
-                    unreachable!();
-                }
-            }
-            Self::Double(val1) => {
-                if let Self::Double(val2) = rhs {
-                    Self::Double(val1 + val2)
-                } else {
-                    unreachable!();
-                }
-            }
-        }
-    }
-}
-
-impl num_traits::identities::Zero for IdxData {
-    fn zero() -> Self {
-        Self::None
-    }
-
-    fn is_zero(&self) -> bool {
-        self == &Self::None
-    }
 }
 
 #[derive(Debug)]
@@ -201,7 +136,7 @@ pub fn read_idx(
 
     //println!("Data Type: {:#?}\nDimension Count: {}\nDimension Sizes: {:#?}", data_type, dimension_count, dimension_sizes);
 
-    let mut data: ArrayD<IdxData> = ArrayD::zeros(IxDyn(&dimension_sizes));
+    let mut data: ArrayD<IdxData> = ArrayD::default(IxDyn(&dimension_sizes));
 
     process_dimensions(idx_source, &mut data, &dimension_sizes, &data_type)?;
 
